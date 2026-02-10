@@ -24,7 +24,21 @@ export default function BookingForm() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const bookingDetails = {
+      date: formData.get("date"),
+      time: formData.get("time"),
+    };
+
+    fetch("https://formspree.io/f/mgoloaqp", {
+      method: "POST",
+      body: formData
+    });
+    
+    localStorage.setItem("moboil_booking", JSON.stringify(bookingDetails));
     setSubmitted(true);
+    window?.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   if (submitted) {
@@ -55,7 +69,7 @@ export default function BookingForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" action="">
           {/* Contact info */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
