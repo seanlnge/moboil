@@ -2,17 +2,26 @@
 const { current = "" } = Astro.props;
 ---
 
-<nav class="fixed w-full h-16 bg-transparent z-50! p-4 backdrop-blur-lg hover:backdrop-blur-2xl flex justify-center items-center font-header text-slate-300 hover:text-white hover:bg-m-primary-black/10 transition-all duration-300">
-  <div class="absolute hidden md:flex left-6 top-1/2 -translate-y-1/2 items-center gap-0 transition duration-500">
-    <img src="/media/logo.png" alt="Moboil" width="40" height="40" class="rounded-full w-12 h-12 object-cover" />
-    <p class="text-md font-semibold font-header text-orange-400">MobOil</p>
-  </div>
-  <div class="flex items-center gap-8">
-    <a class={current === "home" ? "active" : ""} href="/">Home</a>
-    <a class={current === "booking" ? "active" : ""} href="/booking">Book Now</a>
-    <a class={current === "contact" ? "active" : ""} href="/contact">Contact</a>
+<nav class="fixed w-full h-20 bg-transparent z-50! px-6 md:px-12 backdrop-blur-lg hover:backdrop-blur-2xl flex justify-between items-center font-header text-slate-300 hover:text-white hover:bg-m-primary-black/10 transition-all duration-300">
+  <!-- Logo (Left) -->
+  <a href="/" class="flex items-center gap-0 transition duration-500 hover:opacity-80">
+    <img src="/media/logo.png" alt="Moboil" class="rounded-full w-12 h-12 object-cover" />
+    <p class="text-xl font-semibold font-header text-orange-400">Moboil</p>
+  </a>
+
+  <!-- Links (Right) -->
+  <div class="flex items-center gap-6 lg:gap-8">
+    <div class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
+      <a class={`hover:text-orange-400 transition-colors ${current === "home" ? "text-white" : ""}`} href="/">Home</a>
+      <a class={`hover:text-orange-400 transition-colors ${current === "about" ? "text-white" : ""}`} href="/about">About Us</a>
+      <a class={`hover:text-orange-400 transition-colors ${current === "maintenance" ? "text-white" : ""}`} href="/maintenance-tips">Maintenance Tips</a>
+      <a class={`hover:text-orange-400 transition-colors ${current === "contact" ? "text-white" : ""}`} href="/contact">Contact</a>
+    </div>
+    
+    <!-- Book Now Button (Far Right) -->
+    <a class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-full font-semibold text-sm transition-all shadow-lg hover:shadow-orange-500/20 transform hover:-translate-y-0.5" href="/booking">
+      Book Now
+    </a>
   </div>
 </nav>
-<div class="h-16 relative block bg-black">
-
-</div>
+<div class="h-20 relative block bg-black"></div>

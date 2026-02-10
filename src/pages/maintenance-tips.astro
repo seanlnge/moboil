@@ -1,0 +1,70 @@
+---
+import SiteLayout from "../components/SiteLayout.astro";
+import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
+---
+
+<SiteLayout title="Maintenance Tips | Moboil" description="Learn why regular oil changes are crucial for your vehicle's health." current="maintenance">
+	<section class="bg-black w-full min-h-[40vh] flex flex-col items-center text-m-white relative overflow-hidden">
+		<img src="/media/oil.webp" alt="Background" class="absolute inset-0 w-full h-full object-cover z-0" />
+		<div class="absolute inset-0 bg-black/90 z-10"></div>
+		<div class="relative z-20 w-full max-w-6xl px-6 md:px-12 lg:px-16 pt-28 pb-16 text-center">
+			<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-400/80 mb-4">
+				Car Care
+			</p>
+			<h1 class="font-header text-4xl md:text-5xl lg:text-6xl font-semibold text-m-white">
+				Maintenance Tips
+			</h1>
+			<p class="mt-4 text-base md:text-lg text-slate-300 leading-relaxed max-w-xl mx-auto">
+				Keep your engine running smoothly with these essential tips.
+			</p>
+		</div>
+	</section>
+
+	<section class="relative z-30 bg-m-white py-16 md:py-24 px-6 md:px-12">
+		<FlickeringGrid
+			client:load
+			className="-z-10 absolute inset-0 size-full w-full h-full"
+			squareSize={4}
+			gridGap={6}
+			color="#cba"
+			maxOpacity={0.3}
+			flickerChance={0.3}
+		/>
+		<div class="max-w-4xl mx-auto space-y-8">
+			
+			<div class="bg-white/80 backdrop-blur-sm p-8 md:p-10 rounded-2xl shadow-xl border border-slate-100">
+				<h2 class="text-2xl md:text-3xl font-header font-bold text-m-primary-black mb-4">Why are oil changes important?</h2>
+				<p class="text-slate-600 leading-relaxed">
+					Oil is the lifeblood of your engine. It lubricates moving parts, reduces friction, and helps regulate engine temperature. Over time, oil breaks down and collects dirt and debris, which can lead to increased wear and tear, reduced fuel efficiency, and eventually, engine failure. Regular oil changes ensure your engine stays clean, protected, and performing at its best.
+				</p>
+			</div>
+
+			<div class="bg-white/80 backdrop-blur-sm p-8 md:p-10 rounded-2xl shadow-xl border border-slate-100">
+				<h2 class="text-2xl md:text-3xl font-header font-bold text-m-primary-black mb-4">When should you change your oil?</h2>
+				<p class="text-slate-600 leading-relaxed mb-4">
+					The frequency of oil changes depends on your vehicle's make, model, year, and driving conditions.
+				</p>
+				<ul class="list-disc list-inside space-y-2 text-slate-600 ml-2">
+					<li><strong>Standard Oil:</strong> Typically every 3,000 to 5,000 miles.</li>
+					<li><strong>Synthetic Blend:</strong> Usually every 5,000 to 7,500 miles.</li>
+					<li><strong>Full Synthetic:</strong> Can last 7,500 to 10,000 miles or more.</li>
+				</ul>
+				<p class="text-slate-600 leading-relaxed mt-4">
+					Always consult your owner's manual for the manufacturer's specific recommendations. If you drive in severe conditions (stop-and-go traffic, extreme heat, towing), you may need to change it more frequently.
+				</p>
+			</div>
+
+			<div class="bg-white/80 backdrop-blur-sm p-8 md:p-10 rounded-2xl shadow-xl border border-slate-100">
+				<h2 class="text-2xl md:text-3xl font-header font-bold text-m-primary-black mb-4">Signs you need an oil change</h2>
+				<ul class="list-disc list-inside space-y-2 text-slate-600 ml-2">
+					<li><strong>Check Engine or Oil Change Light:</strong> The most obvious warning sign.</li>
+					<li><strong>Dark, Dirty Oil:</strong> Fresh oil is amber; dirty oil is dark brown or black.</li>
+					<li><strong>Engine Noise:</strong> Knocking or ticking sounds can indicate poor lubrication.</li>
+					<li><strong>Exhaust Smoke:</strong> Blue or gray smoke can signal an oil leak or burning oil.</li>
+					<li><strong>Oil Smell:</strong> A strong smell of oil inside the car could mean a leak.</li>
+				</ul>
+			</div>
+
+		</div>
+	</section>
+</SiteLayout>

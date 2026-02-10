@@ -1,18 +1,18 @@
 ---
 import SiteLayout from "../components/SiteLayout.astro";
 import { Button } from "../components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Mail, MapPin, DollarSign, Clock } from "lucide-react";
 import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 ---
 
 <SiteLayout title="Contact | Moboil" description="Get in touch with Moboil for mobile oil changes in the Tampa area." current="contact">
-	<section class="bg-black w-full min-h-[70vh] flex flex-col items-center text-m-white border-m-primary-light relative overflow-hidden">
+	<section class="bg-[url('/media/oil.webp')] bg-cover bg-center w-full min-h-[70vh] flex flex-col items-center text-m-white border-m-primary-light relative overflow-hidden">
 		<FlickeringGrid
 			client:load
-			className="z-0 absolute inset-0 size-full w-full h-full"
+			className="z-0 bg-black/90 absolute inset-0 size-full w-full h-full"
 			squareSize={4}
 			gridGap={6}
-			color="#888"
+			color="#333"
 			maxOpacity={0.3}
 			flickerChance={0.3}
 		/>
@@ -41,43 +41,39 @@ import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 						</a>
 					</div>
 				</div>
-				<div class="space-y-4">
-					<div class="rounded-3xl border border-slate-800 bg-slate-900 p-6 text-m-white shadow-lg shadow-black/20">
-						<p class="uppercase tracking-[0.3em] text-xs font-semibold text-slate-300">
-							Email
-							<span class="ml-2 inline-flex items-center rounded-full bg-orange-500/20 px-2 py-1 font-header text-[10px] font-semibold uppercase tracking-[0.2em] text-orange-300">
-								Primary
-							</span>
-						</p>
-						<div class="mt-4 space-y-3 text-slate-200">
-							<a class="text-slate-300 hover:text-m-white transition" href="mailto:contact@moboil.co">
-								contact@moboil.co
-							</a>
-						</div>
+				<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-1 lg:pl-12 pt-8 lg:pt-0">
+					<!-- Email -->
+					<div class="space-y-3">
+						<h3 class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-orange-400/80">
+							<Mail className="size-4" /> Email
+						</h3>
+						<a href="mailto:contact@moboil.co" class="block text-xl text-slate-200 hover:text-white transition-colors font-medium">
+							contact@moboil.co
+						</a>
 					</div>
-					<div class="rounded-3xl border border-slate-800 bg-slate-900 p-6 text-m-white shadow-lg shadow-black/20">
-						<p class="uppercase tracking-[0.3em] text-xs font-semibold text-slate-300">
-							Service Area
-						</p>
-						<div class="mt-4 space-y-3 text-slate-200">
-							<p class="text-slate-300">Tampa, FL & surrounding areas</p>
-						</div>
+
+					<!-- Service Area -->
+					<div class="space-y-3">
+						<h3 class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-orange-400/80">
+							<MapPin className="size-4" /> Service Area
+						</h3>
+						<p class="text-xl text-slate-200 font-medium">Tampa, FL & surrounding areas</p>
 					</div>
-					<div class="rounded-3xl border border-slate-800 bg-slate-900 p-6 text-m-white shadow-lg shadow-black/20">
-						<p class="uppercase tracking-[0.3em] text-xs font-semibold text-slate-300">
-							Pricing
-						</p>
-						<div class="mt-4 space-y-3 text-slate-200">
-							<p class="text-slate-300">$87 flat rate · No hidden fees</p>
-						</div>
+
+					<!-- Pricing -->
+					<div class="space-y-3">
+						<h3 class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-orange-400/80">
+							<DollarSign className="size-4" /> Pricing
+						</h3>
+						<p class="text-xl text-slate-200 font-medium">$87 flat rate · No hidden fees</p>
 					</div>
-					<div class="rounded-3xl border border-slate-800 bg-slate-900 p-6 text-m-white shadow-lg shadow-black/20">
-						<p class="uppercase tracking-[0.3em] text-xs font-semibold text-slate-300">
-							Hours
-						</p>
-						<div class="mt-4 space-y-3 text-slate-200">
-							<p class="text-slate-300">Mon - Sat · 8am - 7pm</p>
-						</div>
+
+					<!-- Hours -->
+					<div class="space-y-3">
+						<h3 class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-orange-400/80">
+							<Clock className="size-4" /> Hours
+						</h3>
+						<p class="text-xl text-slate-200 font-medium">Mon - Sat · 8am - 7pm</p>
 					</div>
 				</div>
 			</div>
