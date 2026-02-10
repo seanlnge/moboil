@@ -1,0 +1,70 @@
+---
+import "../styles/globals.css";
+import "../styles/fonts.css";
+import Nav from "./Nav.astro";
+
+const { title = "Moboil", description = "", current = "" } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    {description ? <meta name="description" content={description} /> : <meta name="description" content="Moboil - Mobile oil change service in the Tampa area. We come to you." />}
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet" />
+
+    <!-- Facebook Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Moboil - Mobile Oil Changes">
+    <meta property="og:description" content="Moboil - Mobile oil change service in the Tampa area. We come to your car, wherever it is.">
+    <meta property="og:image" content="/media/og.png">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Moboil - Mobile Oil Changes">
+    <meta name="twitter:description" content="Moboil - Mobile oil change service in the Tampa area. We come to your car, wherever it is.">
+    <meta name="twitter:image" content="/media/og.png">
+  </head>
+  <body>
+    <header>
+      <Nav current={current} />
+    </header>
+    <main class="w-full">
+      <slot />
+    </main>
+    <footer class="relative z-30 bg-m-primary-black border-t border-m-primary-light/20">
+      <div class="max-w-6xl mx-auto px-6 md:px-12 lg:px-16 py-10">
+        <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div class="space-y-2">
+            <p class="font-header text-lg text-m-white">Moboil</p>
+            <p class="text-sm text-slate-400">Mobile Oil Changes in Tampa</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-4 text-sm font-semibold text-slate-300">
+            <a class="hover:text-m-white transition" href="/">Home</a>
+            <a class="hover:text-m-white transition" href="/booking">Book Now</a>
+            <a class="hover:text-m-white transition" href="/contact">Contact</a>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-col gap-2 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
+          <p>&copy; {new Date().getFullYear()} Moboil</p>
+          <p>Built with Astro, React, and Tailwind</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

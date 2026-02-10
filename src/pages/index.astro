@@ -1,17 +1,173 @@
 ---
-
+import SiteLayout from "../components/SiteLayout.astro";
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
+import { ArrowRight, Clock, MapPin, DollarSign, Wrench, Car, ShieldCheck } from "lucide-react";
+import { FaqAccordion } from "../components/FaqAccordion";
+import { EtheralShadow } from "../components/aesthetic/etheral-shadow";
+import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<SiteLayout title="Moboil - Mobile Oil Changes" description="Moboil is a mobile oil change service in the Tampa area. We come to your car. $87 flat rate, done in under 30 minutes." current="home">
+	<section class="relative w-full min-h-[80vh] flex items-center justify-center overflow-hidden">
+		<img src="/media/oil.webp" alt="Oil change service in progress" class="absolute inset-0 w-full h-full object-cover" />
+		<div class="absolute inset-0 bg-linear-to-r from-black/90 to-black/55"></div>
+
+		<div class="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-20 flex flex-row gap-12 items-center">
+			<div class="flex flex-col items-start text-left flex-2/3">
+				<div class="font-extrabold font-header text-6xl md:text-7xl mb-4 leading-tight">
+					<h1 class="text-m-white">Oil changes made <span class="text-orange-400">effortless.</span></h1>
+				</div>
+
+				<p class="font-header text-lg md:text-xl text-slate-200 mt-6 mb-8 tracking-wide max-w-xl">
+					Mobile oil changes in Tampa, FL
+				</p>
+			</div>
+
+			<div class="justify-center lg:justify-end w-full md:flex hidden">
+				<Card className="w-88 p-8 bg-black/60 backdrop-blur-md border-white/10 shadow-2xl">
+					<CardHeader className="pb-2 text-center">
+						<CardTitle className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-header text-m-white">$87</CardTitle>
+						<CardDescription className="text-slate-300 uppercase tracking-widest text-xs font-semibold mt-2">
+							Flat Rate
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="flex flex-col gap-6 pt-6">
+						<ul class="space-y-3 text-slate-200 text-base">
+							<li class="flex items-center gap-3">
+								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
+								<span>Full-synthetic oil included</span>
+							</li>
+							<li class="flex items-center gap-3">
+								<MapPin className="w-5 h-5 text-orange-400 shrink-0" />
+								<span>We come to your location</span>
+							</li>
+						</ul>
+						<a href="/booking" class="w-full">
+							<Button className="w-full bg-orange-500 text-white tracking-wide font-semibold hover:bg-orange-400 duration-300 h-12 text-lg">
+								Book Now <ArrowRight className="w-5 h-5 ml-2" />
+							</Button>
+						</a>
+					</CardContent>
+				</Card>
+			</div>
+		</div>
+	</section>
+
+	<!-- How It Works -->
+	<section class="z-30 bg-m-black relative py-24 md:py-32 px-6 md:px-12 xl:px-16 text-m-white">
+		<div class="max-w-5xl mx-auto">
+			<div class="space-y-6 text-center mb-16">
+				<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-400/80">How It Works</p>
+				<h2 class="font-header text-3xl md:text-4xl xl:text-5xl font-semibold text-m-white">
+					No more driving to a shop.
+				</h2>
+				<p class="text-base md:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
+					We bring the oil change to wherever your car is parked, whether it'syour driveway, parking lot, or campus.
+				</p>
+			</div>
+			<div class="grid gap-8 md:grid-cols-3">
+				<div class="flex flex-col items-center text-center gap-4 p-6">
+					<div class="w-16 h-16 rounded-full bg-orange-500/20 flex items-center justify-center">
+						<Car className="w-8 h-8 text-orange-400" />
+					</div>
+					<h3 class="text-xl font-semibold font-header">1. Book Online</h3>
+					<p class="text-slate-400 text-sm leading-relaxed">Pick a date and time that works for you. Tell us about your vehicle and where it's parked.</p>
+				</div>
+				<div class="flex flex-col items-center text-center gap-4 p-6">
+					<div class="w-16 h-16 rounded-full bg-orange-500/20 flex items-center justify-center">
+						<Wrench className="w-8 h-8 text-orange-400" />
+					</div>
+					<h3 class="text-xl font-semibold font-header">2. We Come to You</h3>
+					<p class="text-slate-400 text-sm leading-relaxed">Our technician arrives at your location with everything needed. You don't have to do anything.</p>
+				</div>
+				<div class="flex flex-col items-center text-center gap-4 p-6">
+					<div class="w-16 h-16 rounded-full bg-orange-500/20 flex items-center justify-center">
+						<ShieldCheck className="w-8 h-8 text-orange-400" />
+					</div>
+					<h3 class="text-xl font-semibold font-header">3. Done in 30 Min</h3>
+					<p class="text-slate-400 text-sm leading-relaxed">We complete your oil change quickly and cleanly. Pay the flat $87 rate — no hidden fees.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Pricing / CTA -->
+	<section class="relative z-30 overflow-hidden bg-white">
+		<div class="absolute top-0 left-0 w-full h-full">
+			<FlickeringGrid
+				client:load
+				className="z-0 absolute inset-0 size-full w-full h-full"
+				squareSize={4}
+				gridGap={6}
+				color="#cba"
+				maxOpacity={0.3}
+				flickerChance={0.3}
+			/>
+		</div>
+		<div class="relative z-10 px-6 md:px-12 xl:px-16 py-24 md:py-32">
+			<div class="max-w-4xl mx-auto text-center">
+				<div class="space-y-4 mb-12">
+					<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-400/80">
+						Simple Pricing
+					</p>
+					<h2 class="font-header text-3xl md:text-4xl xl:text-5xl text-m-black font-semibold">
+						One price. No surprises.
+					</h2>
+					<p class="text-base md:text-lg text-slate-800 leading-relaxed max-w-2xl mx-auto">
+						Every oil change is <strong class="text-orange-400">$87</strong> — that includes oil, a new filter, and the convenience of us coming directly to you. No upsells, no hidden charges.
+					</p>
+				</div>
+				<div class="bg-white border border-slate-200 shadow-xl rounded-3xl max-w-5xl mx-auto mb-12 grid md:grid-cols-2 overflow-hidden">
+					<div class="p-10 md:p-16 flex flex-col justify-center items-center text-center bg-slate-50 border-b md:border-b-0 md:border-r border-slate-100">
+						<p class="text-7xl md:text-8xl font-extrabold font-header text-slate-900">$87</p>
+						<p class="text-slate-500 mt-4 font-header uppercase tracking-widest text-sm font-semibold">per oil change</p>
+					</div>
+					<div class="p-10 md:p-16 flex flex-col justify-center bg-white">
+						<ul class="space-y-5 text-left text-slate-700 text-base">
+							<li class="flex items-center gap-3">
+								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
+								<span>Full-synthetic oil (API SP Certified)</span>
+							</li>
+							<li class="flex items-center gap-3">
+								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
+								<span>New oil filter included</span>
+							</li>
+							<li class="flex items-center gap-3">
+								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
+								<span>We come to your location</span>
+							</li>
+							<li class="flex items-center gap-3">
+								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
+								<span>Done in under 30 minutes</span>
+							</li>
+							<li class="flex items-center gap-3">
+								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
+								<span>No hidden fees or upsells</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<a href="/booking">
+					<Button className="bg-orange-500 text-white tracking-wide font-semibold w-64 hover:bg-orange-400 duration-300 text-base h-12">
+						Book Your Oil Change <ArrowRight className="w-4 h-4" />
+					</Button>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- FAQ Section -->
+	<section class="z-30 bg-m-black relative py-24 md:py-32 px-6 md:px-12 xl:px-16 text-m-white border-t border-white/10">
+		<div class="max-w-3xl mx-auto">
+			<div class="space-y-6 text-center mb-16">
+				<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-400/80">FAQ</p>
+				<h2 class="font-header text-3xl md:text-4xl xl:text-5xl font-semibold text-m-white">
+					Frequently Asked Questions
+				</h2>
+			</div>
+			
+			<FaqAccordion client:load />
+		</div>
+	</section>
+</SiteLayout>

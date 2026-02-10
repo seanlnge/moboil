@@ -1,0 +1,18 @@
+---
+const { current = "" } = Astro.props;
+---
+
+<nav class="fixed w-full h-16 bg-transparent z-50! p-4 backdrop-blur-lg hover:backdrop-blur-2xl flex justify-center items-center font-header text-slate-300 hover:text-white hover:bg-m-primary-black/10 transition-all duration-300">
+  <div class="absolute hidden md:flex left-6 top-1/2 -translate-y-1/2 items-center gap-0 transition duration-500">
+    <img src="/media/logo.png" alt="Moboil" width="40" height="40" class="rounded-full w-12 h-12 object-cover" />
+    <p class="text-md font-semibold font-header text-orange-400">MobOil</p>
+  </div>
+  <div class="flex items-center gap-8">
+    <a class={current === "home" ? "active" : ""} href="/">Home</a>
+    <a class={current === "booking" ? "active" : ""} href="/booking">Book Now</a>
+    <a class={current === "contact" ? "active" : ""} href="/contact">Contact</a>
+  </div>
+</nav>
+<div class="h-16 relative block bg-black">
+
+</div>
