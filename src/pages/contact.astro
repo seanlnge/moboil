@@ -1,13 +1,21 @@
 ---
 import SiteLayout from "../components/SiteLayout.astro";
-import { BubbleBackground } from "../components/aesthetic/bubble";
 import { Button } from "../components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 ---
 
 <SiteLayout title="Contact | Moboil" description="Get in touch with Moboil for mobile oil changes in the Tampa area." current="contact">
 	<section class="bg-black w-full min-h-[70vh] flex flex-col items-center text-m-white border-m-primary-light relative overflow-hidden">
-		<BubbleBackground interactive={true} className="h-full w-full opacity-40 absolute top-0 left-0 z-10" />
+		<FlickeringGrid
+			client:load
+			className="z-0 absolute inset-0 size-full w-full h-full"
+			squareSize={4}
+			gridGap={6}
+			color="#888"
+			maxOpacity={0.3}
+			flickerChance={0.3}
+		/>
 		<div class="relative z-20 w-full max-w-6xl px-6 md:px-12 lg:px-16 py-24 md:py-28">
 			<div class="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] items-start">
 				<div class="space-y-6">
