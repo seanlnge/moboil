@@ -20,16 +20,104 @@ import {
 import { ArrowRight } from "lucide-react";
 import AuthPopup from "./AuthPopup";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../lib/firebase";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { db, app, auth } from "../lib/firebase";
 
 import { type User } from "firebase/auth";
+
+const functions = getFunctions(app, "us-east1");
+
+export interface BookingData {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  dateTime?: number; // Unix timestamp
+  service?: string;
+  address?: string;
+  notes?: string;
+  phone?: string;
+  carYear?: string;
+  carMake?: string;
+  carModel?: string;
+  emailStatus?: {
+    customer?: string;
+    admin?: string;
+  };
+  [key: string]: any;
+}
+
+interface SlotsByDate {
+  dateLabel: string;
+  dateKey: string;
+  slots: { label: string; value: string }[];
+}
+
+interface GetAvailableSlotsResponse {
+  slots: number[];
+}
 
 export default function BookingForm() {
   const [submitted, setSubmitted] = React.useState(false);
   const [showAuthPopup, setShowAuthPopup] = React.useState(false);
-  const [pendingBookingData, setPendingBookingData] = React.useState<Record<string, any> | null>(null);
-
+  const [pendingBookingData, setPendingBookingData] = React.useState<BookingData | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [slotsByDate, setSlotsByDate] = React.useState<SlotsByDate[]>([]);
+  const [selectedDate, setSelectedDate] = React.useState<string>("");
+
+  // Fetch available slots from Cloud Function on mount
+  React.useEffect(() => {
+    const fetchSlots = async () => {
+      try {
+        const getAvailableSlots = httpsCallable<unknown, GetAvailableSlotsResponse>(functions, "getAvailableSlots");
+        const result = await getAvailableSlots();
+        const slots = result.data.slots;
+
+        // Group slots by date
+        const grouped = new Map<string, { dateLabel: string; slots: { label: string; value: string }[] }>();
+
+        for (const ts of slots) {
+          const d = new Date(ts);
+          const dateKey = d.toDateString(); // e.g. "Sat Feb 21 2026"
+          const dateLabel = d.toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+          });
+          const timeLabel = d.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+          });
+
+          if (!grouped.has(dateKey)) {
+            grouped.set(dateKey, { dateLabel, slots: [] });
+          }
+          grouped.get(dateKey)!.slots.push({ label: timeLabel, value: String(ts) });
+        }
+
+        const result2: SlotsByDate[] = [];
+        for (const [dateKey, data] of grouped) {
+          result2.push({ dateKey, dateLabel: data.dateLabel, slots: data.slots });
+        }
+
+        setSlotsByDate(result2);
+      } catch (err) {
+        console.error("Error fetching available slots:", err);
+        setError("Could not load available time slots. Please refresh and try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSlots();
+  }, []);
+
+  // Get available times for the selected date
+  const availableTimesForDate = React.useMemo(() => {
+    if (!selectedDate) return [];
+    const dateGroup = slotsByDate.find((d) => d.dateKey === selectedDate);
+    return dateGroup?.slots ?? [];
+  }, [selectedDate, slotsByDate]);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,7 +125,16 @@ export default function BookingForm() {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     
-    const bookingDetails = {
+    const dateTimeStr = formData.get("dateTime") as string;
+
+    if (!dateTimeStr) {
+      setError("Please select a date and time.");
+      return;
+    }
+    
+    const dateTime = parseInt(dateTimeStr, 10);
+
+    const bookingDetails: BookingData = {
       firstName: formData.get("firstName") as string,
       lastName: formData.get("lastName") as string,
       email: formData.get("email") as string,
@@ -45,31 +142,39 @@ export default function BookingForm() {
       carYear: formData.get("carYear") as string,
       carMake: formData.get("carMake") as string,
       carModel: formData.get("carModel") as string,
-      date: formData.get("date") as string,
-      time: formData.get("time") as string,
+      dateTime,
       address: formData.get("address") as string,
       notes: formData.get("notes") as string,
+      service: "Oil Change",
       createdAt: new Date().toISOString(),
       status: "pending"
     };
 
     setPendingBookingData(bookingDetails);
-    setShowAuthPopup(true);
+
+    // If the user is already authenticated, skip the auth popup
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      handleAuthSuccess(currentUser, bookingDetails);
+    } else {
+      setShowAuthPopup(true);
+    }
   }
 
-  const handleAuthSuccess = async (user: User) => {
-    if (!pendingBookingData) return;
+  const handleAuthSuccess = async (user: User, bookingOverride?: BookingData) => {
+    const bookingToSubmit = bookingOverride || pendingBookingData;
+    if (!bookingToSubmit) return;
 
     try {
-      const finalBookingData = {
-        ...pendingBookingData,
+      const finalBookingData: BookingData = {
+        ...bookingToSubmit,
         userId: user.uid,
-        userEmail: user.email,
+        userEmail: user.email || bookingToSubmit.email || null,
       };
 
-      await addDoc(collection(db, "bookings"), finalBookingData);
+      const docRef = await addDoc(collection(db, "bookings"), finalBookingData);
       
-      localStorage.setItem("moboil_booking", JSON.stringify(finalBookingData));
+      localStorage.setItem("moboil_booking", JSON.stringify({ ...finalBookingData, bookingId: docRef.id }));
       setSubmitted(true);
       setShowAuthPopup(false);
       window?.scrollTo({ top: 0, behavior: "smooth" });
@@ -210,31 +315,47 @@ export default function BookingForm() {
             <h3 className="text-lg font-semibold font-header mb-4">
               Appointment Details
             </h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="date">Preferred Date</Label>
-                <Input id="date" name="date" type="date" required />
+            {loading ? (
+              <p className="text-sm text-muted-foreground">Loading available slots...</p>
+            ) : slotsByDate.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No available slots at this time. Please check back later.</p>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Preferred Date</Label>
+                  <Select
+                    value={selectedDate}
+                    onValueChange={(val) => setSelectedDate(val)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a date" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {slotsByDate.map((d) => (
+                        <SelectItem key={d.dateKey} value={d.dateKey}>
+                          {d.dateLabel}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Preferred Time</Label>
+                  <Select name="dateTime" required disabled={!selectedDate}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={selectedDate ? "Select a time" : "Pick a date first"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableTimesForDate.map((t) => (
+                        <SelectItem key={t.value} value={t.value}>
+                          {t.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="time">Preferred Time</Label>
-                <Select name="time">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a time" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="morning">
-                      Morning (8am - 12pm)
-                    </SelectItem>
-                    <SelectItem value="afternoon">
-                      Afternoon (12pm - 4pm)
-                    </SelectItem>
-                    <SelectItem value="evening">
-                      Evening (4pm - 7pm)
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Location */}
