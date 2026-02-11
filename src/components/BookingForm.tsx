@@ -29,6 +29,7 @@ export default function BookingForm() {
     const bookingDetails = {
       date: formData.get("date"),
       time: formData.get("time"),
+      email: formData.get("email"),
     };
 
     fetch("https://formspree.io/f/mgoloaqp", {
