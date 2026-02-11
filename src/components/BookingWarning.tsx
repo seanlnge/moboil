@@ -19,10 +19,6 @@ import { type User } from "firebase/auth";
 
 const functions = getFunctions(app, "us-east1");
 
-interface BookingWarningProps {
-  cancelId?: string;
-}
-
 interface StoredBooking {
   bookingId?: string;
   dateTime?: number;
@@ -36,9 +32,10 @@ interface CancelBookingResponse {
   message: string;
 }
 
-export default function BookingWarning({ cancelId }: BookingWarningProps) {
+export default function BookingWarning() {
   const [booking, setBooking] = React.useState<StoredBooking | null>(null);
   const [formattedDate, setFormattedDate] = React.useState<string>("");
+  const [cancelId, setCancelId] = React.useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(false);
   const [cancelling, setCancelling] = React.useState(false);
@@ -46,8 +43,17 @@ export default function BookingWarning({ cancelId }: BookingWarningProps) {
   const [cancelError, setCancelError] = React.useState<string | null>(null);
   const [showAuthPopup, setShowAuthPopup] = React.useState(false);
 
-  // Check localStorage for existing booking on mount
+  // Read cancel query param from URL and check localStorage on mount
   React.useEffect(() => {
+    // Read ?cancel= from the URL client-side
+    const params = new URLSearchParams(window.location.search);
+    const cancelParam = params.get("cancel");
+    if (cancelParam) {
+      setCancelId(cancelParam);
+      setDialogOpen(true);
+    }
+
+    // Check localStorage for existing booking
     const bookingData = localStorage.getItem("moboil_booking");
     if (bookingData) {
       try {
@@ -78,13 +84,6 @@ export default function BookingWarning({ cancelId }: BookingWarningProps) {
       }
     }
   }, []);
-
-  // If cancelId is present via URL, auto-open the cancel dialog
-  React.useEffect(() => {
-    if (cancelId) {
-      setDialogOpen(true);
-    }
-  }, [cancelId]);
 
   // Determine the booking ID to cancel: URL param takes priority, then localStorage
   const bookingIdToCancel = cancelId || booking?.bookingId;
