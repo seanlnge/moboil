@@ -18,29 +18,71 @@ import {
   CardTitle,
 } from "./ui/card";
 import { ArrowRight } from "lucide-react";
+import AuthPopup from "./AuthPopup";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../lib/firebase";
+
+import { type User } from "firebase/auth";
 
 export default function BookingForm() {
   const [submitted, setSubmitted] = React.useState(false);
+  const [showAuthPopup, setShowAuthPopup] = React.useState(false);
+  const [pendingBookingData, setPendingBookingData] = React.useState<Record<string, any> | null>(null);
+
+  const [error, setError] = React.useState<string | null>(null);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
+    
     const bookingDetails = {
-      date: formData.get("date"),
-      time: formData.get("time"),
-      email: formData.get("email"),
+      firstName: formData.get("firstName") as string,
+      lastName: formData.get("lastName") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      carYear: formData.get("carYear") as string,
+      carMake: formData.get("carMake") as string,
+      carModel: formData.get("carModel") as string,
+      date: formData.get("date") as string,
+      time: formData.get("time") as string,
+      address: formData.get("address") as string,
+      notes: formData.get("notes") as string,
+      createdAt: new Date().toISOString(),
+      status: "pending"
     };
 
-    fetch("https://formspree.io/f/mgoloaqp", {
-      method: "POST",
-      body: formData
-    });
-    
-    localStorage.setItem("moboil_booking", JSON.stringify(bookingDetails));
-    setSubmitted(true);
-    window?.scrollTo({ top: 0, behavior: "smooth" });
+    setPendingBookingData(bookingDetails);
+    setShowAuthPopup(true);
   }
+
+  const handleAuthSuccess = async (user: User) => {
+    if (!pendingBookingData) return;
+
+    try {
+      const finalBookingData = {
+        ...pendingBookingData,
+        userId: user.uid,
+        userEmail: user.email,
+      };
+
+      await addDoc(collection(db, "bookings"), finalBookingData);
+      
+      localStorage.setItem("moboil_booking", JSON.stringify(finalBookingData));
+      setSubmitted(true);
+      setShowAuthPopup(false);
+      window?.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error: any) {
+      console.error("Error adding document: ", error);
+      if (error.code === 'permission-denied') {
+        setError("Permission denied. Please ensure you are signed in and have the correct permissions.");
+      } else {
+        setError("An error occurred while submitting your booking. Please try again.");
+      }
+      setShowAuthPopup(false);
+    }
+  };
 
   if (submitted) {
     return (
@@ -60,6 +102,12 @@ export default function BookingForm() {
 
   return (
     <Card className="max-w-2xl mx-auto bg-white">
+      <AuthPopup 
+        isOpen={showAuthPopup} 
+        onClose={() => setShowAuthPopup(false)} 
+        onSuccess={handleAuthSuccess}
+        phoneNumber={pendingBookingData?.phone}
+      />
       <CardHeader>
         <CardTitle className="text-2xl font-header">
           Book Your Oil Change
@@ -70,6 +118,11 @@ export default function BookingForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6" action="">
           {/* Contact info */}
           <div className="grid gap-4 sm:grid-cols-2">
