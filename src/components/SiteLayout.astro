@@ -11,7 +11,7 @@ const { title = "Moboil", description = "", current = "" } = Astro.props;
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     {description ? <meta name="description" content={description} /> : <meta name="description" content="Moboil - Mobile oil change service in the Tampa area. We come to you." />}
     <title>{title}</title>
@@ -21,26 +21,21 @@ const { title = "Moboil", description = "", current = "" } = Astro.props;
       rel="stylesheet"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet" />
 
     <!-- Facebook Meta Tags -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Moboil - Mobile Oil Changes">
     <meta property="og:description" content="Moboil - Mobile oil change service in the Tampa area. We come to your car, wherever it is.">
-    <meta property="og:image" content="/media/logo.png">
+    <meta property="og:image" content="/media/open_graph_image.png">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Moboil - Mobile Oil Changes">
     <meta name="twitter:description" content="Moboil - Mobile oil change service in the Tampa area. We come to your car, wherever it is.">
-    <meta name="twitter:image" content="/media/logo.png">
+    <meta name="twitter:image" content="/media/open_graph_image.png">
   </head>
   <body>
     <header>

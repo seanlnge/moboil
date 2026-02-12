@@ -2,7 +2,7 @@
 const { current = "" } = Astro.props;
 ---
 
-<nav class="fixed w-full h-20 bg-transparent z-50! px-6 md:px-12 backdrop-blur-lg hover:backdrop-blur-2xl flex justify-between items-center font-header text-slate-300 hover:text-white hover:bg-m-primary-black/10 transition-all duration-300">
+<nav class="fixed w-full h-20 bg-transparent z-50! px-6 md:px-12 backdrop-blur-lg flex justify-between items-center font-header text-slate-300 transition-all duration-300">
   <!-- Logo (Left) -->
   <a href="/" class="flex items-center gap-0 transition duration-500 hover:opacity-80">
     <img src="/media/logo.png" alt="Moboil" class="rounded-full w-12 h-12 object-cover" />
@@ -10,7 +10,7 @@ const { current = "" } = Astro.props;
   </a>
 
   <!-- Links (Right) -->
-  <div class="flex items-center gap-6 lg:gap-8">
+  <div class="flex items-center gap-4 lg:gap-8">
     <div class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
       <a class={`hover:text-orange-400 transition-colors ${current === "home" ? "text-white" : ""}`} href="/">Home</a>
       <a class={`hover:text-orange-400 transition-colors ${current === "about" ? "text-white" : ""}`} href="/about">About Us</a>
@@ -18,10 +18,109 @@ const { current = "" } = Astro.props;
       <a class={`hover:text-orange-400 transition-colors ${current === "contact" ? "text-white" : ""}`} href="/contact">Contact</a>
     </div>
     
-    <!-- Book Now Button (Far Right) -->
+    <!-- Book Now Button -->
     <a class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-full font-semibold text-sm transition-all shadow-lg hover:shadow-orange-500/20 transform hover:-translate-y-0.5" href="/booking">
       Book Now
     </a>
+
+    <!-- Mobile Hamburger Button -->
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-white/10 transition-colors"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+    >
+      <span id="hamburger-top" class="block w-5 h-0.5 bg-white rounded-full transition-all duration-300"></span>
+      <span id="hamburger-mid" class="block w-5 h-0.5 bg-white rounded-full mt-1.5 transition-all duration-300"></span>
+      <span id="hamburger-bot" class="block w-5 h-0.5 bg-white rounded-full mt-1.5 transition-all duration-300"></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile Drawer -->
+<div
+  id="mobile-menu-overlay"
+  class="fixed inset-0 bg-black/60 backdrop-blur-sm z-60 opacity-0 pointer-events-none transition-opacity duration-300"
+></div>
+
+<div
+  id="mobile-menu-drawer"
+  class="fixed top-0 right-0 h-full w-72 bg-m-black border-l border-white/10 z-70 translate-x-full transition-transform duration-300 ease-out flex flex-col"
+>
+  <!-- Drawer Header -->
+  <div class="flex items-center justify-between px-6 h-20 border-b border-white/10">
+    <a href="/" class="flex items-center gap-0">
+      <img src="/media/logo.png" alt="Moboil" class="rounded-full w-10 h-10 object-cover" />
+      <span class="text-lg font-semibold font-header text-orange-400">Moboil</span>
+    </a>
+    <button
+      id="mobile-menu-close"
+      class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors text-white"
+      aria-label="Close navigation menu"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Drawer Links -->
+  <nav class="flex flex-col px-6 py-6 gap-1 text-sm font-medium font-header text-slate-300">
+    <a class={`px-4 py-3 rounded-lg transition-colors ${current === "home" ? "text-orange-400 bg-orange-400/10" : "text-slate-300 hover:text-white hover:bg-white/5"}`} href="/">Home</a>
+    <a class={`px-4 py-3 rounded-lg transition-colors ${current === "about" ? "text-orange-400 bg-orange-400/10" : "text-slate-300 hover:text-white hover:bg-white/5"}`} href="/about">About Us</a>
+    <a class={`px-4 py-3 rounded-lg transition-colors ${current === "maintenance" ? "text-orange-400 bg-orange-400/10" : "text-slate-300 hover:text-white hover:bg-white/5"}`} href="/maintenance-tips">Maintenance Tips</a>
+    <a class={`px-4 py-3 rounded-lg transition-colors ${current === "contact" ? "text-orange-400 bg-orange-400/10" : "text-slate-300 hover:text-white hover:bg-white/5"}`} href="/contact">Contact</a>
+  </nav>
+
+  <!-- Drawer CTA -->
+  <div class="mt-auto px-6 pb-8">
+    <a
+      class="block w-full text-center bg-orange-500 hover:bg-orange-400 text-white px-5 py-3 rounded-full font-semibold text-sm transition-all"
+      href="/booking"
+    >
+      Book Now
+    </a>
+  </div>
+</div>
+
 <div class="h-20 relative block bg-black"></div>
+
+<script>
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const closeBtn = document.getElementById('mobile-menu-close');
+  const overlay = document.getElementById('mobile-menu-overlay');
+  const drawer = document.getElementById('mobile-menu-drawer');
+  const top = document.getElementById('hamburger-top');
+  const mid = document.getElementById('hamburger-mid');
+  const bot = document.getElementById('hamburger-bot');
+
+  function openMenu() {
+    overlay?.classList.remove('opacity-0', 'pointer-events-none');
+    overlay?.classList.add('opacity-100');
+    drawer?.classList.remove('translate-x-full');
+    drawer?.classList.add('translate-x-0');
+    menuBtn?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    // Animate hamburger to X
+    top?.classList.add('rotate-45', 'translate-y-[4px]');
+    mid?.classList.add('opacity-0');
+    bot?.classList.add('-rotate-45', '-translate-y-[4px]');
+  }
+
+  function closeMenu() {
+    overlay?.classList.add('opacity-0', 'pointer-events-none');
+    overlay?.classList.remove('opacity-100');
+    drawer?.classList.add('translate-x-full');
+    drawer?.classList.remove('translate-x-0');
+    menuBtn?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    // Animate X back to hamburger
+    top?.classList.remove('rotate-45', 'translate-y-[4px]');
+    mid?.classList.remove('opacity-0');
+    bot?.classList.remove('-rotate-45', '-translate-y-[4px]');
+  }
+
+  menuBtn?.addEventListener('click', openMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+  overlay?.addEventListener('click', closeMenu);
+</script>
