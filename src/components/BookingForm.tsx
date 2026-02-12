@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { ArrowRight } from "lucide-react";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import AuthPopup from "./AuthPopup";
 import { collection, addDoc } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -65,7 +66,8 @@ export default function BookingForm() {
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [slotsByDate, setSlotsByDate] = React.useState<SlotsByDate[]>([]);
-  const [selectedDate, setSelectedDate] = React.useState<string>("");
+  const [selectedSlot, setSelectedSlot] = React.useState<string>("");
+  const [showAllSlots, setShowAllSlots] = React.useState(false);
   const [selectedMake, setSelectedMake] = React.useState<string>("");
   const [selectedModel, setSelectedModel] = React.useState<string>("");
   const [selectedTrim, setSelectedTrim] = React.useState<string>("");
@@ -168,12 +170,9 @@ export default function BookingForm() {
     };
   }, [carYear, selectedMake, selectedModel]);
 
-  // Get available times for the selected date
-  const availableTimesForDate = React.useMemo(() => {
-    if (!selectedDate) return [];
-    const dateGroup = slotsByDate.find((d) => d.dateKey === selectedDate);
-    return dateGroup?.slots ?? [];
-  }, [selectedDate, slotsByDate]);
+  const INITIAL_DAY_COUNT = 7;
+  const visibleDays = showAllSlots ? slotsByDate : slotsByDate.slice(0, INITIAL_DAY_COUNT);
+  const hasMoreDays = slotsByDate.length > INITIAL_DAY_COUNT;
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -181,14 +180,12 @@ export default function BookingForm() {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     
-    const dateTimeStr = formData.get("dateTime") as string;
-
-    if (!dateTimeStr) {
+    if (!selectedSlot) {
       setError("Please select a date and time.");
       return;
     }
-    
-    const dateTime = parseInt(dateTimeStr, 10);
+
+    const dateTime = parseInt(selectedSlot, 10);
 
     const bookingDetails: BookingData = {
       firstName: formData.get("firstName") as string,
@@ -466,40 +463,53 @@ export default function BookingForm() {
             ) : slotsByDate.length === 0 ? (
               <p className="text-sm text-muted-foreground">No available slots at this time. Please check back later.</p>
             ) : (
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>Preferred Date</Label>
-                  <Select
-                    value={selectedDate}
-                    onValueChange={(val) => setSelectedDate(val)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a date" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {slotsByDate.map((d) => (
-                        <SelectItem key={d.dateKey} value={d.dateKey}>
-                          {d.dateLabel}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Preferred Time</Label>
-                  <Select name="dateTime" required disabled={!selectedDate}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={selectedDate ? "Select a time" : "Pick a date first"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableTimesForDate.map((t) => (
-                        <SelectItem key={t.value} value={t.value}>
-                          {t.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="space-y-4">
+                <Label>Select a Date &amp; Time</Label>
+                <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+                  <div className="flex">
+                    {visibleDays.map((day) => (
+                      <div
+                        key={day.dateKey}
+                        className="flex flex-col items-center border-r last:border-r-0 px-4 py-3 min-w-[130px]"
+                      >
+                        <span className="text-sm font-semibold text-gray-900 mb-3">
+                          {day.dateLabel}
+                        </span>
+                        <div className="flex flex-col gap-2">
+                          {day.slots.map((slot) => (
+                            <button
+                              key={slot.value}
+                              type="button"
+                              onClick={() => setSelectedSlot(slot.value)}
+                              className={`
+                                inline-flex items-center justify-center rounded-full border px-3 py-1.5 text-sm font-medium
+                                whitespace-nowrap transition-colors cursor-pointer
+                                ${selectedSlot === slot.value
+                                  ? "border-orange-500 bg-orange-500 text-white"
+                                  : "border-gray-200 bg-white text-gray-700 hover:border-orange-300 hover:bg-orange-50"
+                                }
+                              `}
+                            >
+                              {slot.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+                {hasMoreDays && !showAllSlots && (
+                  <div className="flex justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setShowAllSlots(true)}
+                      className="text-sm font-medium text-orange-600 hover:text-orange-500 transition-colors cursor-pointer"
+                    >
+                      See more times ({slotsByDate.length - INITIAL_DAY_COUNT} more days)
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
