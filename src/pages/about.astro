@@ -1,6 +1,8 @@
 ---
 import SiteLayout from "../components/SiteLayout.astro";
 import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
+import { Button } from "~/components/ui/button";
+import { ArrowRight, MapPin, Clock, ShieldCheck, DollarSign } from "lucide-react";
 ---
 
 <SiteLayout title="About Us | Moboil" description="Learn more about Moboil, the premier mobile oil change service in Tampa." current="about">
@@ -30,21 +32,122 @@ import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 			maxOpacity={0.3}
 			flickerChance={0.3}
 		/>
-		<div class="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-2xl shadow-xl border border-slate-100">
-			<h2 class="text-3xl font-header font-bold text-m-primary-black mb-6">Our Story</h2>
-			<p class="text-slate-600 mb-6 leading-relaxed">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<div class="max-w-4xl mx-auto space-y-12">
+			<!-- Our Story -->
+			<div class="bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-2xl shadow-xl border border-slate-100">
+				<h2 class="text-3xl font-header font-bold text-m-primary-black mb-6">Our Story</h2>
+				<p class="text-slate-600 mb-6 leading-relaxed">
+					Moboil started with a simple observation: getting an oil change shouldn't eat up half your day. Between driving to a shop, waiting around, and driving back, a 20-minute service somehow turns into a two-hour errand. We thought there had to be a better way.
+				</p>
+				<p class="text-slate-600 mb-6 leading-relaxed">
+					So we built Moboil — a mobile oil change service that comes directly to you, wherever your car is parked. Your driveway, your office parking lot, your apartment complex — we bring everything we need and get it done while you go about your day.
+				</p>
+				<p class="text-slate-600 leading-relaxed">
+					Based in Tampa, Florida, we're focused on making car maintenance as painless as possible. No waiting rooms. No upsells. Just a quality oil change at a fair price.
+				</p>
+			</div>
+
+			<!-- Why Moboil -->
+			<div class="bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-2xl shadow-xl border border-slate-100">
+				<h2 class="text-3xl font-header font-bold text-m-primary-black mb-8">Why Moboil</h2>
+				<div class="grid gap-6 sm:grid-cols-2">
+					<div class="flex items-start gap-4">
+						<div class="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center shrink-0">
+							<MapPin className="w-6 h-6 text-orange-500" />
+						</div>
+						<div>
+							<h3 class="font-header font-semibold text-m-primary-black text-lg mb-1">We Come to You</h3>
+							<p class="text-slate-600 text-sm leading-relaxed">
+								No more driving to a shop or sitting in a waiting room. We service your car wherever it's parked in the Tampa area.
+							</p>
+						</div>
+					</div>
+					<div class="flex items-start gap-4">
+						<div class="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center shrink-0">
+							<Clock className="w-6 h-6 text-orange-500" />
+						</div>
+						<div>
+							<h3 class="font-header font-semibold text-m-primary-black text-lg mb-1">Done in Under 30 Min</h3>
+							<p class="text-slate-600 text-sm leading-relaxed">
+								We arrive prepared with everything we need. Most oil changes are completed in 20–30 minutes.
+							</p>
+						</div>
+					</div>
+					<div class="flex items-start gap-4">
+						<div class="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center shrink-0">
+							<DollarSign className="w-6 h-6 text-orange-500" />
+						</div>
+						<div>
+							<h3 class="font-header font-semibold text-m-primary-black text-lg mb-1">$87 Flat Rate</h3>
+							<p class="text-slate-600 text-sm leading-relaxed">
+								One price that covers everything — full-synthetic oil, a new filter, and the convenience of mobile service. No hidden fees.
+							</p>
+						</div>
+					</div>
+					<div class="flex items-start gap-4">
+						<div class="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center shrink-0">
+							<ShieldCheck className="w-6 h-6 text-orange-500" />
+						</div>
+						<div>
+							<h3 class="font-header font-semibold text-m-primary-black text-lg mb-1">Quality You Can Trust</h3>
+							<p class="text-slate-600 text-sm leading-relaxed">
+								We use API SP-certified full-synthetic oil and OEM-spec filters. Your engine gets the same quality of service as a dealership.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Our Mission -->
+			<div class="bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-2xl shadow-xl border border-slate-100">
+				<h2 class="text-3xl font-header font-bold text-m-primary-black mb-6">Our Mission</h2>
+				<p class="text-slate-600 mb-6 leading-relaxed">
+					We believe routine car maintenance should fit into your life — not the other way around. Our mission is to remove every barrier between you and a well-maintained vehicle.
+				</p>
+				<p class="text-slate-600 leading-relaxed">
+					That means transparent pricing with no surprises, convenient scheduling that works around your day, and a service you can count on every time. We're not trying to sell you things you don't need. We're here to do one thing really well: keep your engine running smoothly.
+				</p>
+			</div>
+
+			<!-- Service Area -->
+			<div class="bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-2xl shadow-xl border border-slate-100">
+				<h2 class="text-3xl font-header font-bold text-m-primary-black mb-6">Service Area</h2>
+				<p class="text-slate-600 mb-4 leading-relaxed">
+					We currently serve the greater Tampa, Florida area including:
+				</p>
+				<div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-slate-600">
+					<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Tampa</span>
+					<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> South Tampa</span>
+					<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Westchase</span>
+					<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Carrollwood</span>
+					<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Brandon</span>
+					<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Town 'N' Country</span>
+					<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Temple Terrace</span>
+					<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> USF Area</span>
+					<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Ybor City</span>
+				</div>
+				<p class="text-slate-500 text-sm mt-4 leading-relaxed">
+					Not sure if we cover your area? Book anyway — we'll confirm when we reach out.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA -->
+	<section class="z-30 bg-m-black relative py-20 md:py-28 px-6 md:px-12 text-m-white text-center">
+		<div class="max-w-2xl mx-auto space-y-6">
+			<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-400/80">Ready?</p>
+			<h2 class="font-header text-3xl md:text-4xl font-semibold text-m-white">
+				Let's get your oil changed.
+			</h2>
+			<p class="text-slate-300 text-base md:text-lg leading-relaxed">
+				Pick a time that works for you and we'll handle the rest. Full-synthetic oil, new filter, done in under 30 minutes.
 			</p>
-			<p class="text-slate-600 mb-6 leading-relaxed">
-				Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-			</p>
-			<h2 class="text-3xl font-header font-bold text-m-primary-black mb-6 mt-10">Our Mission</h2>
-			<p class="text-slate-600 mb-6 leading-relaxed">
-				At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
-			</p>
-			<p class="text-slate-600 leading-relaxed">
-				Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.
-			</p>
+			<a href="/booking">
+				<Button className="bg-orange-500 text-white tracking-wide font-semibold hover:bg-orange-400 duration-300 text-base h-12 w-64 mt-4">
+					Book Your Oil Change <ArrowRight className="w-4 h-4 ml-2" />
+				</Button>
+			</a>
 		</div>
 	</section>
 </SiteLayout>

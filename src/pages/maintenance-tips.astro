@@ -2,6 +2,8 @@
 import SiteLayout from "../components/SiteLayout.astro";
 import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 import { MaintenanceAccordion } from "~/components/MaintenanceAccordion";
+import { Button } from "~/components/ui/button";
+import { ArrowRight } from "lucide-react";
 ---
 
 <SiteLayout title="Maintenance Tips | Moboil" description="Learn why regular oil changes are crucial for your vehicle's health." current="maintenance">
@@ -35,6 +37,23 @@ import { MaintenanceAccordion } from "~/components/MaintenanceAccordion";
 			<div class="bg-white/80 backdrop-blur-sm p-8 md:p-10 rounded-2xl shadow-xl border border-slate-100">
 				<MaintenanceAccordion client:load />
 			</div>
+		</div>
+	</section>
+
+	<section class="z-30 bg-m-black relative py-20 md:py-28 px-6 md:px-12 text-m-white text-center">
+		<div class="max-w-2xl mx-auto space-y-6">
+			<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-400/80">Stay on Top of It</p>
+			<h2 class="font-header text-3xl md:text-4xl font-semibold text-m-white">
+				Due for an oil change?
+			</h2>
+			<p class="text-slate-300 text-base md:text-lg leading-relaxed">
+				We'll come to you anywhere in Tampa. Full-synthetic oil, new filter, done in under 30 minutes — all for a flat $87.
+			</p>
+			<a href="/booking">
+				<Button className="bg-orange-500 text-white tracking-wide font-semibold hover:bg-orange-400 duration-300 text-base h-12 w-64 mt-4">
+					Book Your Oil Change <ArrowRight className="w-4 h-4 ml-2" />
+				</Button>
+			</a>
 		</div>
 	</section>
 </SiteLayout>
