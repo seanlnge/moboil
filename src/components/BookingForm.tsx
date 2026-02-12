@@ -22,6 +22,7 @@ import AuthPopup from "./AuthPopup";
 import { collection, addDoc } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { db, app, auth } from "../lib/firebase";
+import { carMakes, fetchModels, fetchTrims, type TrimOption } from "../lib/cars";
 
 import { type User } from "firebase/auth";
 
@@ -39,6 +40,7 @@ export interface BookingData {
   carYear?: string;
   carMake?: string;
   carModel?: string;
+  carTrim?: string;
   emailStatus?: {
     customer?: string;
     admin?: string;
@@ -64,6 +66,14 @@ export default function BookingForm() {
   const [loading, setLoading] = React.useState(true);
   const [slotsByDate, setSlotsByDate] = React.useState<SlotsByDate[]>([]);
   const [selectedDate, setSelectedDate] = React.useState<string>("");
+  const [selectedMake, setSelectedMake] = React.useState<string>("");
+  const [selectedModel, setSelectedModel] = React.useState<string>("");
+  const [selectedTrim, setSelectedTrim] = React.useState<string>("");
+  const [availableModels, setAvailableModels] = React.useState<string[]>([]);
+  const [modelsLoading, setModelsLoading] = React.useState(false);
+  const [availableTrims, setAvailableTrims] = React.useState<TrimOption[]>([]);
+  const [trimsLoading, setTrimsLoading] = React.useState(false);
+  const [carYear, setCarYear] = React.useState<string>("");
 
   // Fetch available slots from Cloud Function on mount
   React.useEffect(() => {
@@ -112,6 +122,52 @@ export default function BookingForm() {
     fetchSlots();
   }, []);
 
+  // Fetch models when year + make are both set
+  React.useEffect(() => {
+    setSelectedModel("");
+    setSelectedTrim("");
+    setAvailableModels([]);
+    setAvailableTrims([]);
+
+    if (!carYear || !selectedMake || selectedMake === "Other") return;
+
+    let cancelled = false;
+    setModelsLoading(true);
+
+    fetchModels(selectedMake, carYear).then((models) => {
+      if (!cancelled) {
+        setAvailableModels(models);
+        setModelsLoading(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [carYear, selectedMake]);
+
+  // Fetch trims when year + make + model are all set
+  React.useEffect(() => {
+    setSelectedTrim("");
+    setAvailableTrims([]);
+
+    if (!carYear || !selectedMake || !selectedModel) return;
+
+    let cancelled = false;
+    setTrimsLoading(true);
+
+    fetchTrims(carYear, selectedMake, selectedModel).then((trims) => {
+      if (!cancelled) {
+        setAvailableTrims(trims);
+        setTrimsLoading(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [carYear, selectedMake, selectedModel]);
+
   // Get available times for the selected date
   const availableTimesForDate = React.useMemo(() => {
     if (!selectedDate) return [];
@@ -142,6 +198,7 @@ export default function BookingForm() {
       carYear: formData.get("carYear") as string,
       carMake: formData.get("carMake") as string,
       carModel: formData.get("carModel") as string,
+      carTrim: selectedTrim || undefined,
       dateTime,
       address: formData.get("address") as string,
       notes: formData.get("notes") as string,
@@ -279,7 +336,7 @@ export default function BookingForm() {
             <h3 className="text-lg font-semibold font-header mb-4">
               Vehicle Information
             </h3>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="carYear">Year</Label>
                 <Input
@@ -287,25 +344,114 @@ export default function BookingForm() {
                   name="carYear"
                   placeholder="2020"
                   required
+                  value={carYear}
+                  onChange={(e) => setCarYear(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="carMake">Make</Label>
-                <Input
-                  id="carMake"
+                <Label>Make</Label>
+                <Select
                   name="carMake"
-                  placeholder="Toyota"
                   required
-                />
+                  value={selectedMake}
+                  onValueChange={(val) => {
+                    setSelectedMake(val);
+                    setSelectedModel("");
+                    setSelectedTrim("");
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select make" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {carMakes.map((make) => (
+                      <SelectItem key={make} value={make}>
+                        {make}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="carModel">Model</Label>
-                <Input
-                  id="carModel"
-                  name="carModel"
-                  placeholder="Camry"
-                  required
-                />
+                <Label>Model</Label>
+                {selectedMake === "Other" ? (
+                  <Input
+                    name="carModel"
+                    placeholder="Enter model"
+                    value={selectedModel}
+                    onChange={(e) => setSelectedModel(e.target.value)}
+                    required
+                  />
+                ) : modelsLoading ? (
+                  <p className="text-sm text-muted-foreground pt-2">Loading models...</p>
+                ) : availableModels.length > 0 ? (
+                  <Select
+                    name="carModel"
+                    required
+                    value={selectedModel}
+                    onValueChange={(val) => {
+                      setSelectedModel(val);
+                      setSelectedTrim("");
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableModels.map((model) => (
+                        <SelectItem key={model} value={model}>
+                          {model}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    name="carModel"
+                    placeholder={
+                      !carYear || !selectedMake
+                        ? "Enter year & make first"
+                        : "No models found"
+                    }
+                    disabled
+                  />
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label>Trim</Label>
+                {trimsLoading ? (
+                  <p className="text-sm text-muted-foreground pt-2">Loading trims...</p>
+                ) : availableTrims.length > 0 ? (
+                  <Select
+                    name="carTrim"
+                    required
+                    value={selectedTrim}
+                    onValueChange={setSelectedTrim}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select trim" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableTrims.map((trim) => (
+                        <SelectItem key={trim.value} value={trim.text}>
+                          {trim.text}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    name="carTrim"
+                    placeholder={
+                      !selectedModel
+                        ? "Pick year, make & model first"
+                        : "Enter trim (optional)"
+                    }
+                    value={selectedTrim}
+                    onChange={(e) => setSelectedTrim(e.target.value)}
+                    disabled={!selectedModel}
+                  />
+                )}
               </div>
             </div>
           </div>
