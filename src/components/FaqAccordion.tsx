@@ -22,7 +22,7 @@ const faqItems = [
 		value: "item-3",
 		question: "How long does the service take?",
 		answer:
-			"Most appointments are completed in under 30 minutes from the time we arrive.",
+			"Most appointments are completed in under 60 minutes from the time we arrive.",
 	},
 	{
 		value: "item-4",
