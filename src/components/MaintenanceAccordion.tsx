@@ -33,7 +33,7 @@ export function MaintenanceAccordion() {
 						<li><strong>Full Synthetic:</strong> Can last 7,500 to 10,000 miles or more.</li>
 					</ul>
 					<p className="text-slate-600 leading-relaxed mt-4">
-						Always consult your owner's manual for the manufacturer's specific recommendations. If you drive in severe conditions — stop-and-go traffic, extreme heat (common in Tampa), short trips, or towing — you may need to change it more frequently.
+						Always consult your owner's manual for the manufacturer's specific recommendations. If you drive in severe conditions — stop-and-go traffic, extreme heat (common in Florida), short trips, or towing — you may need to change it more frequently.
 					</p>
 				</AccordionContent>
 			</AccordionItem>

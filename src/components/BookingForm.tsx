@@ -46,7 +46,7 @@ export interface BookingData {
     customer?: string;
     admin?: string;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface SlotsByDate {
@@ -232,9 +232,10 @@ export default function BookingForm() {
       setSubmitted(true);
       setShowAuthPopup(false);
       window?.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const typedError = error as { code?: string };
       console.error("Error adding document: ", error);
-      if (error.code === 'permission-denied') {
+      if (typedError.code === "permission-denied") {
         setError("Permission denied. Please ensure you are signed in and have the correct permissions.");
       } else {
         setError("An error occurred while submitting your booking. Please try again.");
@@ -322,7 +323,7 @@ export default function BookingForm() {
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="(813) 555-1234"
+                placeholder="(352) 555-1234"
                 required
               />
             </div>
@@ -527,7 +528,7 @@ export default function BookingForm() {
                 <Input
                   id="address"
                   name="address"
-                  placeholder="1234 Main St, Tampa, FL or parking lot description"
+                  placeholder="1234 Main St, Gainesville, FL or parking lot description"
                   required
                 />
               </div>

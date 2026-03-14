@@ -2,24 +2,93 @@
 import SiteLayout from "../components/SiteLayout.astro";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
-import { ArrowRight, MapPin, Wrench, Car, ShieldCheck } from "lucide-react";
+import { ArrowRight, MapPin, Car, ShieldCheck, Clock3, House, Building2 } from "lucide-react";
 import { FaqAccordion } from "../components/FaqAccordion";
 import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
+
+const trustSignals = [
+	"Flat-rate $87 pricing",
+	"Full-synthetic oil + new filter included",
+	"No upsells or surprise charges",
+	"We come to your location in Gainesville",
+	"Most appointments finished in under 60 minutes",
+] as const;
+
+const howItWorksSteps = [
+	{
+		title: "Book in under a minute",
+		description:
+			"Pick a time that fits your class, work, or study schedule. No phone calls and no awkward back-and-forth.",
+	},
+	{
+		title: "Park where you normally park",
+		description:
+			"Driveway, apartment lot, townhome, or student housing. Leave your car where it already is.",
+	},
+	{
+		title: "We handle the oil change",
+		description:
+			"Stay inside, go to class, or keep working. We do the service while you do literally anything else.",
+	},
+] as const;
+
+const studentReasons = [
+	{
+		title: "No waiting room",
+		description: "You should not lose half your day sitting in a shop for basic maintenance.",
+	},
+	{
+		title: "No awkward upsell pressure",
+		description: "One clear flat rate. No mystery recommendations, no pressure, no games.",
+	},
+	{
+		title: "No wasted Saturday",
+		description: "Handle this from your couch and get on with your life.",
+	},
+	{
+		title: "Built for student life",
+		description: "Book around classes, group projects, shifts, and everything else on your calendar.",
+	},
+	{
+		title: "Done where you live",
+		description: "Student houses, apartment lots, and townhomes across Gainesville.",
+	},
+	{
+		title: "Feels easy and handled",
+		description: "The easiest adult responsibility you will check off this month.",
+	},
+] as const;
+
+const serviceAreaTypes = [
+	"Student houses and shared rentals",
+	"Off-campus apartment complexes",
+	"Townhomes and neighborhood driveways",
+	"Open-access office lots",
+] as const;
+
+const pricingIncludes = [
+	"Full-synthetic oil included",
+	"New oil filter included",
+	"Mobile service to your location",
+	"Most appointments done in under 60 minutes",
+	"No hidden fees and no upsells",
+	"Fully insured service",
+] as const;
 ---
 
-<SiteLayout title="Moboil - Mobile Oil Changes" description="Moboil is a mobile oil change service in the Tampa area. We come to your car. $87 flat rate, done in under 60 minutes." current="home">
-	<section class="relative w-full min-h-[80vh] flex items-center justify-center overflow-hidden">
+<SiteLayout title="Moboil Gainesville | Mobile Oil Changes" description="Moboil is Gainesville's student-friendly mobile oil change service. Book online, park where you live, and we handle the rest for a flat $87." current="home">
+	<section class="relative w-full h-[calc(100dvh-5rem)] flex items-center justify-center overflow-hidden">
 		<img src="/media/oil.webp" alt="Oil change service in progress" class="absolute inset-0 w-full h-full object-cover" />
 		<div class="absolute inset-0 bg-linear-to-r from-black/90 to-black/55"></div>
 
-		<div class="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-20 flex flex-row gap-12 items-center">
+		<div class="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 md:py-0 flex flex-col md:flex-row gap-8 items-center">
 			<div class="flex flex-col items-start text-left flex-2/3">
-				<div class="font-extrabold font-header text-6xl md:text-7xl mb-4 leading-tight">
-					<h1 class="text-m-white">Oil changes made <span class="text-orange-400">effortless.</span></h1>
+				<div class="font-extrabold font-header text-4xl md:text-[2.75rem] xl:text-5xl mb-3 leading-tight">
+					<h1 class="text-m-white">Oil changes for Gainesville students with <span class="text-orange-400">better things to do.</span></h1>
 				</div>
 
-				<p class="font-header text-lg md:text-xl text-slate-200 mt-6 mb-8 tracking-wide max-w-xl">
-					Mobile oil changes anywhere in Tampa, FL
+				<p class="font-header text-base text-slate-200 mt-4 mb-5 tracking-wide max-w-xl">
+					Book from your house, apartment, or student housing. No waiting rooms, no wasted afternoons, no shop visit required.
 				</p>
 
 				<!-- Mobile-only CTA -->
@@ -27,29 +96,46 @@ import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 					<a href="/booking" class="bg-orange-500 hover:bg-orange-400 text-white px-8 py-3.5 rounded-full font-semibold text-base transition-all shadow-lg hover:shadow-orange-500/20 flex items-center gap-2">
 						Book Now — $87 <ArrowRight className="w-4 h-4" />
 					</a>
-					<p class="text-slate-400 text-sm">Full-synthetic oil · Done in 60 min</p>
+					<a href="#how-it-works" class="text-slate-300 text-sm underline underline-offset-4 hover:text-white transition-colors">
+						How It Works
+					</a>
+				</div>
+
+				<div class="hidden xl:flex items-center gap-4">
+					<a href="/booking">
+						<Button className="bg-orange-500 hover:bg-orange-400 text-white tracking-wide font-semibold h-12 px-8 text-base">
+							Book Now <ArrowRight className="w-4 h-4" />
+						</Button>
+					</a>
+					<a href="#how-it-works" class="text-slate-300 hover:text-white transition-colors underline underline-offset-4">
+						How It Works
+					</a>
 				</div>
 			</div>
 
 			<div class="justify-center lg:justify-end w-full md:flex hidden">
-				<Card className="w-88 p-8 bg-black/60 backdrop-blur-md border-white/10 shadow-2xl">
+				<Card className="w-80 lg:w-84 p-6 bg-black/60 backdrop-blur-md border-white/10 shadow-2xl">
 					<CardHeader className="pb-2 text-center">
-						<CardTitle className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-header text-m-white">$87</CardTitle>
+						<CardTitle className="text-4xl lg:text-5xl font-extrabold font-header text-m-white">$87</CardTitle>
 						<CardDescription className="text-slate-300 uppercase tracking-widest text-xs font-semibold mt-2">
-							Flat Rate
+							Student-Friendly Flat Rate
 						</CardDescription>
 					</CardHeader>
-					<CardContent className="flex flex-col gap-6 pt-6">
-						<ul class="space-y-3 text-slate-200 text-base">
+					<CardContent className="flex flex-col gap-5 pt-5">
+						<ul class="space-y-3 text-slate-200 text-sm md:text-base">
 							<li class="flex items-center gap-3">
 								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
 								<span>Full-synthetic oil included</span>
 							</li>
-							<li class="flex items-center gap-3">
-								<MapPin className="w-5 h-5 text-orange-400 shrink-0" />
-								<span>We come to your location</span>
-							</li>
-						</ul>
+						<li class="flex items-center gap-3">
+							<MapPin className="w-5 h-5 text-orange-400 shrink-0" />
+							<span>We come to Gainesville locations</span>
+						</li>
+						<li class="flex items-center gap-3">
+							<Clock3 className="w-5 h-5 text-orange-400 shrink-0" />
+							<span>No waiting rooms or shop downtime</span>
+						</li>
+					</ul>
 						<a href="/booking" class="w-full">
 							<Button className="w-full bg-orange-500 text-white tracking-wide font-semibold hover:bg-orange-400 duration-300 h-12 text-lg">
 								Book Now <ArrowRight className="w-5 h-5 ml-2" />
@@ -61,40 +147,98 @@ import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 		</div>
 	</section>
 
+	<!-- Trust Strip -->
+	<section class="z-30 relative bg-[#0d0d0d] border-y border-white/10 px-6 md:px-12 xl:px-16 py-8">
+		<div class="max-w-7xl mx-auto grid gap-3 md:grid-cols-2 lg:grid-cols-5">
+			{trustSignals.map((signal) => (
+				<div class="rounded-xl bg-white/3 border border-white/8 px-4 py-3 text-sm text-slate-200 flex items-center gap-2">
+					<ShieldCheck className="w-4 h-4 text-orange-400 shrink-0" />
+					<span>{signal}</span>
+				</div>
+			))}
+		</div>
+	</section>
+
 	<!-- How It Works -->
-	<section class="z-30 bg-m-black relative py-24 md:py-32 px-6 md:px-12 xl:px-16 text-m-white">
+	<section id="how-it-works" class="z-30 bg-m-black relative py-24 md:py-32 px-6 md:px-12 xl:px-16 text-m-white">
 		<div class="max-w-5xl mx-auto">
 			<div class="space-y-6 text-center mb-16">
 				<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-400/80">How It Works</p>
 				<h2 class="font-header text-3xl md:text-4xl xl:text-5xl font-semibold text-m-white">
-					No more driving to a shop.
+					The easiest adult responsibility on your list.
 				</h2>
 				<p class="text-base md:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
-					We bring the oil change to wherever your car is parked, whether it's your driveway, parking lot, or campus.
+					No errands. No waiting room. No afternoon lost. Moboil is built for busy Gainesville students and young adults.
 				</p>
 			</div>
 			<div class="grid gap-8 md:grid-cols-3">
-				<div class="flex flex-col items-center text-center gap-4 p-6">
-					<div class="w-16 h-16 rounded-full bg-orange-500/20 flex items-center justify-center">
-						<Car className="w-8 h-8 text-orange-400" />
+				{howItWorksSteps.map((step, index) => (
+					<div class="flex flex-col items-center text-center gap-4 p-6 rounded-2xl border border-white/10 bg-white/2">
+						<div class="w-16 h-16 rounded-full bg-orange-500/20 flex items-center justify-center">
+							<Car className="w-8 h-8 text-orange-400" />
+						</div>
+						<h3 class="text-xl font-semibold font-header">{index + 1}. {step.title}</h3>
+						<p class="text-slate-400 text-sm leading-relaxed">{step.description}</p>
 					</div>
-					<h3 class="text-xl font-semibold font-header">1. Book Online</h3>
-					<p class="text-slate-400 text-sm leading-relaxed">Pick a date and time that works for you. Tell us about your vehicle and where it's parked.</p>
-				</div>
-				<div class="flex flex-col items-center text-center gap-4 p-6">
-					<div class="w-16 h-16 rounded-full bg-orange-500/20 flex items-center justify-center">
-						<Wrench className="w-8 h-8 text-orange-400" />
+				))}
+			</div>
+			<div class="mt-12 text-center">
+				<a href="/booking">
+					<Button className="bg-orange-500 text-white tracking-wide font-semibold w-64 hover:bg-orange-400 duration-300 text-base h-12">
+						Book Now <ArrowRight className="w-4 h-4" />
+					</Button>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Why Students Use Moboil -->
+	<section class="z-30 relative bg-white py-24 md:py-32 px-6 md:px-12 xl:px-16">
+		<div class="max-w-6xl mx-auto">
+			<div class="space-y-5 text-center mb-14">
+				<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-500/90">Why Students Use Moboil</p>
+				<h2 class="font-header text-3xl md:text-4xl xl:text-5xl text-m-black font-semibold">
+					Because adulting should not eat your entire day.
+				</h2>
+				<p class="text-base md:text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">
+					If you want to keep your car handled without turning it into a weekend project, you are exactly who this was built for.
+				</p>
+			</div>
+			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+				{studentReasons.map((reason) => (
+					<div class="rounded-2xl border border-slate-200 bg-white shadow-sm px-6 py-6">
+						<h3 class="font-header text-xl text-slate-900 font-semibold mb-2">{reason.title}</h3>
+						<p class="text-slate-600 text-sm leading-relaxed">{reason.description}</p>
 					</div>
-					<h3 class="text-xl font-semibold font-header">2. We Come to You</h3>
-					<p class="text-slate-400 text-sm leading-relaxed">Our technician arrives at your location with everything needed. You don't have to do anything.</p>
-				</div>
-				<div class="flex flex-col items-center text-center gap-4 p-6">
-					<div class="w-16 h-16 rounded-full bg-orange-500/20 flex items-center justify-center">
-						<ShieldCheck className="w-8 h-8 text-orange-400" />
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Gainesville Service Fit -->
+	<section class="z-30 relative bg-[#111111] py-24 md:py-28 px-6 md:px-12 xl:px-16 text-m-white border-y border-white/10">
+		<div class="max-w-5xl mx-auto">
+			<div class="space-y-5 text-center mb-12">
+				<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-400/80">Built For Gainesville</p>
+				<h2 class="font-header text-3xl md:text-4xl xl:text-5xl font-semibold">
+					Works best where parking is simple and accessible.
+				</h2>
+				<p class="text-base md:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
+					Moboil is ideal for homes and low-rise living setups where your car is parked in an outdoor spot we can access quickly.
+				</p>
+			</div>
+			<div class="grid gap-4 md:grid-cols-2">
+				{serviceAreaTypes.map((serviceArea, index) => (
+					<div class="rounded-xl border border-white/10 bg-white/3 p-5 flex items-center gap-3 text-slate-200">
+						{index < 3 ? <House className="w-5 h-5 text-orange-400 shrink-0" /> : <Building2 className="w-5 h-5 text-orange-400 shrink-0" />}
+						<span>{serviceArea}</span>
 					</div>
-					<h3 class="text-xl font-semibold font-header">3. Done in 60 Min</h3>
-					<p class="text-slate-400 text-sm leading-relaxed">We complete your oil change quickly and cleanly. Pay the flat $87 rate — no hidden fees.</p>
-				</div>
+				))}
+			</div>
+			<div class="mt-10 text-center">
+				<a href="/booking" class="inline-flex items-center gap-2 text-orange-300 hover:text-orange-200 transition-colors font-semibold underline underline-offset-4">
+					Check availability in Gainesville <ArrowRight className="w-4 h-4" />
+				</a>
 			</div>
 		</div>
 	</section>
@@ -119,10 +263,10 @@ import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 						Simple Pricing
 					</p>
 					<h2 class="font-header text-3xl md:text-4xl xl:text-5xl text-m-black font-semibold">
-						One price. No surprises.
+						One flat rate. Zero pricing anxiety.
 					</h2>
 					<p class="text-base md:text-lg text-slate-800 leading-relaxed max-w-2xl mx-auto">
-						Every oil change is <strong class="text-orange-400">$87</strong> — that includes oil, a new filter, and the convenience of us coming directly to you. No upsells, no hidden charges.
+						Every oil change is <strong class="text-orange-400">$87</strong>. Full synthetic, new filter, and mobile service are included. No surprise charges. No shop markup games.
 					</p>
 				</div>
 				<div class="bg-white border border-slate-200 shadow-xl rounded-3xl max-w-5xl mx-auto mb-12 grid md:grid-cols-2 overflow-hidden">
@@ -132,32 +276,18 @@ import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 					</div>
 					<div class="p-10 md:p-16 flex flex-col justify-center bg-white">
 						<ul class="space-y-5 text-left text-slate-700 text-base">
-							<li class="flex items-center gap-3">
-								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
-								<span>Full-synthetic oil (API SP Certified)</span>
-							</li>
-							<li class="flex items-center gap-3">
-								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
-								<span>New oil filter included</span>
-							</li>
-							<li class="flex items-center gap-3">
-								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
-								<span>We come to your location</span>
-							</li>
-							<li class="flex items-center gap-3">
-								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
-								<span>Done in under 60 minutes</span>
-							</li>
-							<li class="flex items-center gap-3">
-								<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
-								<span>No hidden fees or upsells</span>
-							</li>
+							{pricingIncludes.map((item) => (
+								<li class="flex items-center gap-3">
+									<ShieldCheck className="w-5 h-5 text-orange-400 shrink-0" />
+									<span>{item}</span>
+								</li>
+							))}
 						</ul>
 					</div>
 				</div>
 				<a href="/booking">
 					<Button className="bg-orange-500 text-white tracking-wide font-semibold w-64 hover:bg-orange-400 duration-300 text-base h-12">
-						Book Your Oil Change <ArrowRight className="w-4 h-4" />
+						Book Now <ArrowRight className="w-4 h-4" />
 					</Button>
 				</a>
 			</div>
@@ -170,11 +300,18 @@ import { FlickeringGrid } from "~/components/aesthetic/flickering-grid";
 			<div class="space-y-6 text-center mb-16">
 				<p class="uppercase tracking-[0.35em] text-xs font-semibold text-orange-400/80">FAQ</p>
 				<h2 class="font-header text-3xl md:text-4xl xl:text-5xl font-semibold text-m-white">
-					Frequently Asked Questions
+					Questions students ask before booking
 				</h2>
 			</div>
 			
 			<FaqAccordion client:load />
+			<div class="mt-10 text-center">
+				<a href="/booking">
+					<Button className="bg-orange-500 text-white tracking-wide font-semibold w-64 hover:bg-orange-400 duration-300 text-base h-12">
+						Book Now <ArrowRight className="w-4 h-4" />
+					</Button>
+				</a>
+			</div>
 		</div>
 	</section>
 </SiteLayout>

@@ -8,15 +8,15 @@ import {
 const faqItems = [
 	{
 		value: "item-1",
-		question: "What is included in the $87 price?",
+		question: "Do I need to be there the whole time?",
 		answer:
-			"Our flat rate includes up to 5 quarts of conventional or synthetic blend oil, a new premium oil filter, labor, and our travel fee. There are no hidden charges.",
+			"No. As long as we can access your vehicle and keys, you can go back to class, work, or whatever else you are doing.",
 	},
 	{
 		value: "item-2",
-		question: "Where do you provide service?",
+		question: "Can you service my car at my apartment or house?",
 		answer:
-			"We serve the greater Tampa area. We can perform the oil change at your home, office, campus, or any legal parking spot.",
+			"Yes. We are built for Gainesville homes, townhomes, and student apartment lots with accessible outdoor parking.",
 	},
 	{
 		value: "item-3",
@@ -26,9 +26,27 @@ const faqItems = [
 	},
 	{
 		value: "item-4",
-		question: "Do I need to be present?",
+		question: "What is included in the $87 flat rate?",
 		answer:
-			"We just need access to your vehicle (keys) to pop the hood and verify the work. You can hand us the keys and go back to what you were doing!",
+			"Full-synthetic oil, a new oil filter, labor, and mobile service to your location. No hidden fees and no surprise upsells.",
+	},
+	{
+		value: "item-5",
+		question: "Do you only work in Gainesville?",
+		answer:
+			"Right now, Gainesville is our primary service area. If you are nearby, reach out and we can confirm availability.",
+	},
+	{
+		value: "item-6",
+		question: "Is mobile oil service safe and clean?",
+		answer:
+			"Yes. We use professional procedures, keep the job site tidy, and dispose of used oil responsibly. Moboil is fully insured.",
+	},
+	{
+		value: "item-7",
+		question: "What if I have never booked an oil change before?",
+		answer:
+			"That is exactly why we keep it simple. Book your time, tell us your car details, and we handle the rest with clear communication the whole way.",
 	},
 ] as const;
 
