@@ -104,7 +104,7 @@ export function MaintenanceAccordion() {
 						<li><strong>Accelerated Wear:</strong> Metal-on-metal contact from degraded oil leads to premature wear on bearings, pistons, and camshafts.</li>
 						<li><strong>Overheating:</strong> Dirty oil is less effective at absorbing and transferring heat away from the engine.</li>
 						<li><strong>Voided Warranty:</strong> Many manufacturers require proof of regular oil changes to honor powertrain warranties.</li>
-						<li><strong>Costly Repairs:</strong> An $87 oil change is far cheaper than a $4,000–$8,000 engine replacement.</li>
+						<li><strong>Costly Repairs:</strong> A $97 oil change is far cheaper than a $4,000–$8,000 engine replacement.</li>
 					</ul>
 				</AccordionContent>
 			</AccordionItem>

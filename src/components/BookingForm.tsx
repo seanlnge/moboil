@@ -42,6 +42,12 @@ export interface BookingData {
   carMake?: string;
   carModel?: string;
   carTrim?: string;
+  basePrice?: number;
+  promoCode?: string | null;
+  promoDiscountValue?: number;
+  promoDiscountUnit?: "dollars" | "percent" | null;
+  promoDiscountAmount?: number;
+  finalPrice?: number;
   emailStatus?: {
     customer?: string;
     admin?: string;
@@ -58,6 +64,21 @@ interface SlotsByDate {
 interface GetAvailableSlotsResponse {
   slots: number[];
 }
+
+type PromoUnit = "dollars" | "percent";
+
+interface PromoCheckResponse {
+  amountOff: number;
+  unit: PromoUnit;
+}
+
+interface AppliedPromo {
+  code: string;
+  amountOff: number;
+  unit: PromoUnit;
+}
+
+const BASE_PRICE = 97;
 
 export default function BookingForm() {
   const [submitted, setSubmitted] = React.useState(false);
@@ -76,6 +97,10 @@ export default function BookingForm() {
   const [availableTrims, setAvailableTrims] = React.useState<TrimOption[]>([]);
   const [trimsLoading, setTrimsLoading] = React.useState(false);
   const [carYear, setCarYear] = React.useState<string>("");
+  const [promoCodeInput, setPromoCodeInput] = React.useState("");
+  const [promoStatusMessage, setPromoStatusMessage] = React.useState<string | null>(null);
+  const [isCheckingPromo, setIsCheckingPromo] = React.useState(false);
+  const [appliedPromo, setAppliedPromo] = React.useState<AppliedPromo | null>(null);
 
   // Fetch available slots from Cloud Function on mount
   React.useEffect(() => {
@@ -174,6 +199,53 @@ export default function BookingForm() {
   const visibleDays = showAllSlots ? slotsByDate : slotsByDate.slice(0, INITIAL_DAY_COUNT);
   const hasMoreDays = slotsByDate.length > INITIAL_DAY_COUNT;
 
+  const promoDiscountAmount = React.useMemo(() => {
+    if (!appliedPromo) return 0;
+    if (appliedPromo.unit === "percent") {
+      return Math.max(0, Math.min(BASE_PRICE, (BASE_PRICE * appliedPromo.amountOff) / 100));
+    }
+    return Math.max(0, Math.min(BASE_PRICE, appliedPromo.amountOff));
+  }, [appliedPromo]);
+
+  const finalPrice = Math.max(0, BASE_PRICE - promoDiscountAmount);
+  const normalizedPromoInput = promoCodeInput.trim().toUpperCase();
+
+  const handleCheckPromo = async () => {
+    if (!normalizedPromoInput) {
+      setAppliedPromo(null);
+      setPromoStatusMessage(null);
+      return;
+    }
+
+    setIsCheckingPromo(true);
+    setPromoStatusMessage(null);
+
+    try {
+      const checkPromoCode = httpsCallable<{ code: string }, PromoCheckResponse>(functions, "checkPromoCode");
+      const response = await checkPromoCode({ code: normalizedPromoInput });
+      const { amountOff, unit } = response.data;
+
+      if (amountOff > 0) {
+        setAppliedPromo({
+          code: normalizedPromoInput,
+          amountOff,
+          unit,
+        });
+        const detail = unit === "percent" ? `${amountOff}% off` : `$${amountOff} off`;
+        setPromoStatusMessage(`Promo code confirmed: ${detail}.`);
+      } else {
+        setAppliedPromo(null);
+        setPromoStatusMessage("Promo code denied. Please check and try again.");
+      }
+    } catch (promoError) {
+      console.error("Error checking promo code:", promoError);
+      setAppliedPromo(null);
+      setPromoStatusMessage("Could not verify promo code right now. Please try again.");
+    } finally {
+      setIsCheckingPromo(false);
+    }
+  };
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
@@ -200,6 +272,12 @@ export default function BookingForm() {
       address: formData.get("address") as string,
       notes: formData.get("notes") as string,
       service: "Oil Change",
+      basePrice: BASE_PRICE,
+      promoCode: appliedPromo?.code || null,
+      promoDiscountValue: appliedPromo?.amountOff || 0,
+      promoDiscountUnit: appliedPromo?.unit || null,
+      promoDiscountAmount: promoDiscountAmount,
+      finalPrice: finalPrice,
       createdAt: new Date().toISOString(),
       status: "pending"
     };
@@ -515,6 +593,55 @@ export default function BookingForm() {
             )}
           </div>
 
+          {/* Pricing */}
+          <div className="border-t pt-6 space-y-4">
+            <h3 className="text-lg font-semibold font-header">Pricing</h3>
+            <div className="space-y-2 text-sm">
+              <p className="text-gray-700">Base price: ${BASE_PRICE.toFixed(2)}</p>
+              {appliedPromo && (
+                <p className="text-green-700">
+                  Promo discount: -${promoDiscountAmount.toFixed(2)} ({appliedPromo.code})
+                </p>
+              )}
+              <p className="font-semibold text-gray-900">Total: ${finalPrice.toFixed(2)}</p>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+              <div className="space-y-2">
+                <Label htmlFor="promoCode">Promo Code</Label>
+                <Input
+                  id="promoCode"
+                  name="promoCode"
+                  placeholder="Enter promo code"
+                  value={promoCodeInput}
+                  onChange={(e) => {
+                    const nextValue = e.target.value;
+                    setPromoCodeInput(nextValue);
+                    if (appliedPromo && appliedPromo.code !== nextValue.trim().toUpperCase()) {
+                      setAppliedPromo(null);
+                    }
+                  }}
+                />
+              </div>
+              <Button
+                type="button"
+                onClick={handleCheckPromo}
+                className="sm:w-auto"
+                disabled={isCheckingPromo}
+              >
+                {isCheckingPromo ? "Checking..." : "Apply Code"}
+              </Button>
+            </div>
+            {promoStatusMessage && (
+              <p
+                className={`text-sm ${
+                  appliedPromo ? "text-green-700" : "text-red-600"
+                }`}
+              >
+                {promoStatusMessage}
+              </p>
+            )}
+          </div>
+
           {/* Location */}
           <div className="border-t pt-6">
             <h3 className="text-lg font-semibold font-header mb-4">
@@ -553,7 +680,7 @@ export default function BookingForm() {
           </Button>
 
           <p className="text-xs text-muted-foreground text-center">
-            $87 flat rate — you'll pay when the service is complete. No upfront
+            $97 flat rate before promo codes — you'll pay when the service is complete. No upfront
             charge.
           </p>
         </form>

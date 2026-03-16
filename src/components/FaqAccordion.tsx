@@ -26,7 +26,7 @@ const faqItems = [
 	},
 	{
 		value: "item-4",
-		question: "What is included in the $87 flat rate?",
+		question: "What is included in the $97 flat rate?",
 		answer:
 			"Full-synthetic oil, a new oil filter, labor, and mobile service to your location. No hidden fees and no surprise upsells.",
 	},
